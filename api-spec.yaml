@@ -1,74 +1,64 @@
 openapi: 3.0.0
 externalDocs:
   url: https://ncw-developers.fireblocks.com/docs/getting-started
-  description: Fireblocks Non Custodial Wallet Documentation
+  description: Fireblocks Embedded Wallets Documentation
 info:
   title: Fireblocks NCW
-  description: Fireblocks Non Custodial Wallet Open API Specification
-  version: "1.0.2"
+  description: |
+    Fireblocks Embedded Wallets solution allows you to manage digital assets securely and effectively by granting end users full control over their funds or tokens without reliance on a third-party custodian. 
+    The solution comes with native web and mobile Software Development Kits (SDKs), which businesses can seamlessly integrate into their existing applications. This integration provides a safeguarded and smooth method for storing and overseeing digital assets.
+  version: 1.0.2
   contact:
-    url: "support@fireblocks.com"
+    url: support@fireblocks.com
 tags:
-  - name: Non Custodial Wallets
-  - name: Non Custodial Wallet Accounts
-  - name: Non Custodial Wallet Assets
-  - name: Non Custodial Wallet Devices
-  - name: Non Custodial Wallets RPC
-  
-x-tagGroups:
-  name: 'NCW'
-  tags: ['Non Custodial Wallets', 'Non Custodial Wallet Accounts']
+  - name: Wallets
+  - name: Accounts
+  - name: Wallet Assets
+  - name: Devices
+  - name: RPC
 servers:
-  - url: "https://sandbox-api.fireblocks.io"
+  - url: https://sandbox-api.fireblocks.io
     description: Fireblocks Sandbox Environment
-  - url: "https://api.fireblocks.io"
+  - url: https://api.fireblocks.io
     description: Fireblocks Production Environment
+x-readme:
+  explorer-enabled: false
+  samples-languages:
+    - javascript
+security:
+  - bearerTokenAuth: []
+  - ApiKeyAuth: []
 paths:
-  /v1/transactions:
-    post:
-      tags:
-        - Non Custodial Wallets
-      summary: Create Transaction
-      description: Create a new transaction
-      operationId: CreateTransaction
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "https://github.com/SlavaSereb/fireblocks-openapi-spec/blob/main/open_api_spec.yml#/components/schemas/TransactionRequest"
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "https://github.com/SlavaSereb/fireblocks-openapi-spec/blob/main/open_api_spec.yml#/components/schemas/CreateTransactionResponse"
   /v1/ncw/wallets:
     post:
-      x-code-samples:
-          lang: JavaScript
-          label: JS
-          source: |
-            const newWallet = await fireblocks.NCW.createWallet();
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: const newWallet = await fireblocks.NCW.createWallet();
+            name: Fireblocks Javascript NCW SDK example
       operationId: create
       summary: Create a new wallet
       description: Create new Non Custodial Wallet
+      parameters: []
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WalletDto"
+                $ref: '#/components/schemas/WalletDto'
       tags:
-        - Non Custodial Wallets
+        - Wallets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const newWallet = await fireblocks.NCW.createWallet();
     get:
-      x-code-samples:
-            lang: JavaScript
-            label: JS
-            source: |
-              const wallets = await fireblocks.NCW.getWallets({})
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: const wallets = await fireblocks.NCW.getWallets({})
+            name: Fireblocks Javascript NCW SDK example
       operationId: findAllWallets
       summary: List wallets
       description: Get all Non Custodial Wallets
@@ -111,23 +101,27 @@ paths:
           schema:
             type: boolean
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetWalletsResponse"
-        "400":
+                $ref: '#/components/schemas/GetWalletsResponse'
+        '400':
           description: Query parameters were invalid
       tags:
-        - Non Custodial Wallets
+        - Wallets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const wallets = await fireblocks.NCW.getWallets({})
   /v1/ncw/wallets/{walletId}:
     get:
-      x-code-samples:
-          lang: JavaScript
-          label: JS
-          source: |
-            const wallet = await fireblocks.NCW.getWallet("walletId")
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: const wallet = await fireblocks.NCW.getWallet("walletId")
+            name: Fireblocks Javascript NCW SDK example
       operationId: findOneWallet
       summary: Get a wallet
       description: Get a specific Non Custodial Wallet by wallet ID
@@ -137,37 +131,52 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WalletDto"
+                $ref: '#/components/schemas/WalletDto'
       tags:
-        - Non Custodial Wallets
+        - Wallets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const wallet = await fireblocks.NCW.getWallet("walletId")
   /v1/ncw/wallets/{walletId}/backup/latest:
     get:
       operationId: getLatestBackup
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: await fireblocks.NCW.getLatestBackup("walletId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Get wallet Latest Backup details
-      description: Get wallet Latest Backup details, including the deviceId, and backup time.
+      description: >-
+        Get wallet Latest Backup details, including the deviceId, and backup
+        time.
       parameters:
         - name: walletId
           required: true
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LatestBackupResponse"
+                $ref: '#/components/schemas/LatestBackupResponse'
       tags:
-        - Non Custodial Wallets
+        - Wallets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: await fireblocks.NCW.getLatestBackup("walletId")
   /v1/wallets/{walletId}/setup_status:
     get:
       operationId: getWalletSetupState
@@ -179,17 +188,22 @@ paths:
           schema:
             type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WalletSetupStatusResponse"
+                $ref: '#/components/schemas/WalletSetupStatusResponse'
       tags:
-        - Non Custodial Wallets
+        - Wallets
   /v1/ncw/wallets/{walletId}/enable:
     put:
       operationId: enableWallet
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: await fireblocks.NCW.enableWallet("walletId", true)
+            name: Fireblocks Javascript NCW SDK example
       summary: Enable or disable a wallet
       description: Enable or disable a Non Custodial Wallet
       parameters:
@@ -198,21 +212,32 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EnableWalletDto"
+              $ref: '#/components/schemas/EnableWalletDto'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
       tags:
-        - Non Custodial Wallets
+        - Wallets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: await fireblocks.NCW.enableWallet("walletId", true)
   /v1/ncw/wallets/{walletId}/accounts:
     post:
       operationId: createAccount
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const newAccount = await
+              fireblocks.NCW.createWalletAccount("walletId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Create a new account
       description: Create a new account under a specific Non Custodial Wallet
       parameters:
@@ -221,18 +246,31 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AccountDto"
+                $ref: '#/components/schemas/AccountDto'
       tags:
-        - Non Custodial Wallet Accounts
+        - Accounts
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const newAccount = await
+            fireblocks.NCW.createWalletAccount("walletId")
     get:
       operationId: findAllAccounts
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const accounts = await
+              fireblocks.NCW.getWalletAccounts("walletId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Get accounts
       description: Get all accounts under a specific Non Custodial Wallet
       parameters:
@@ -241,7 +279,7 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: pageCursor
           required: false
           in: query
@@ -281,17 +319,28 @@ paths:
           schema:
             type: boolean
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetAccountsResponse"
+                $ref: '#/components/schemas/GetAccountsResponse'
       tags:
-        - Non Custodial Wallet Accounts
+        - Accounts
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const accounts = await fireblocks.NCW.getWalletAccounts("walletId")
   /v1/ncw/wallets/{walletId}/accounts/{accountId}:
     get:
       operationId: findOneAccount
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const account = await fireblocks.NCW.getWalletAccount("walletId",
+              0)
+            name: Fireblocks Javascript NCW SDK example
       summary: Get an account
       description: Get a specific account under a specific Non Custodial Wallet
       parameters:
@@ -300,7 +349,7 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -308,26 +357,37 @@ paths:
             type: number
             example: 0
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AccountDto"
+                $ref: '#/components/schemas/AccountDto'
       tags:
-        - Non Custodial Wallet Accounts
+        - Accounts
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const account = await fireblocks.NCW.getWalletAccount("walletId", 0)
   /v1/ncw/wallets/{walletId}/accounts/{accountId}/assets:
     get:
       operationId: getAssets
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: const assets = await fireblocks.NCW.getWalletAssets("walletId", 0)
+            name: Fireblocks Javascript NCW SDK example
       summary: Retrieve assets
-      description: Get all assets under a specific account, under a specific Non Custodial Wallet
+      description: >-
+        Get all assets under a specific account, under a specific Non Custodial
+        Wallet
       parameters:
         - name: walletId
           required: true
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -377,26 +437,39 @@ paths:
           schema:
             type: boolean
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetAssetsResponse"
+                $ref: '#/components/schemas/GetAssetsResponse'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: const assets = await fireblocks.NCW.getWalletAssets("walletId", 0)
   /v1/ncw/wallets/{walletId}/accounts/{accountId}/assets/{assetId}:
     get:
       operationId: getAsset
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const asset = await fireblocks.NCW.getWalletAsset("walletId", 0,
+              "assetId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Retrieve asset
-      description: Get a specific asset, under a specific account, under a specific Non Custodial Wallet
+      description: >-
+        Get a specific asset, under a specific account, under a specific Non
+        Custodial Wallet
       parameters:
         - name: walletId
           required: true
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -405,30 +478,45 @@ paths:
             example: 0
         - name: assetId
           required: true
-          example: "ETH"
+          example: ETH
           in: path
           schema:
             type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssetResponseDto"
+                $ref: '#/components/schemas/AssetResponseDto'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const asset = await fireblocks.NCW.getWalletAsset("walletId", 0,
+            "assetId")
     post:
       operationId: addAsset
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const newAsset = await
+              fireblocks.NCW.activateWalletAsset("walletId", 0, "assetId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Add asset to account
-      description: Add a new asset to an existing account, under a specific Non Custodial Wallet
+      description: >-
+        Add a new asset to an existing account, under a specific Non Custodial
+        Wallet
       parameters:
         - name: walletId
           required: true
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -437,22 +525,35 @@ paths:
             example: 0
         - name: assetId
           required: true
-          example: "ETH"
+          example: ETH
           in: path
           schema:
             type: string
       responses:
-        "201":
-          description: ""
+        '201':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AddressDetails"
+                $ref: '#/components/schemas/AddressDetails'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const newAsset = await
+            fireblocks.NCW.activateWalletAsset("walletId", 0, "assetId")
   /v1/ncw/wallets/{walletId}/accounts/{accountId}/assets/{assetId}/balance:
     put:
       operationId: refreshAssetBalance
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const refreshBalance = await
+              fireblocks.NCW.refreshWalletAssetBalance("walletId",0,"assetId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Refresh asset balance
       description: Refresh the balance of an asset in a specific account
       parameters:
@@ -461,7 +562,7 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -470,21 +571,34 @@ paths:
             example: 0
         - name: assetId
           required: true
-          example: "ETH"
+          example: ETH
           in: path
           schema:
             type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssetBalance"
+                $ref: '#/components/schemas/AssetBalance'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const refreshBalance = await
+            fireblocks.NCW.refreshWalletAssetBalance("walletId",0,"assetId")
     get:
       operationId: getAssetBalance
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const assetBalance = await
+              fireblocks.NCW.getWalletAssetBalance("walletId", 0, "assetId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Retrieve asset balance
       description: Get balance for specific asset, under a specific account
       parameters:
@@ -493,7 +607,7 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -502,31 +616,46 @@ paths:
             example: 0
         - name: assetId
           required: true
-          example: "ETH"
+          example: ETH
           in: path
           schema:
             type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssetBalance"
+                $ref: '#/components/schemas/AssetBalance'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const assetBalance = await
+            fireblocks.NCW.getWalletAssetBalance("walletId", 0, "assetId")
   /v1/ncw/wallets/{walletId}/accounts/{accountId}/assets/{assetId}/addresses:
     get:
       operationId: getAddresses
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const addresses = await
+              fireblocks.NCW.getWalletAssetAddresses("walletId", 0, "assetId")
+            name: Fireblocks Javascript NCW SDK example
       summary: Retrieve asset addresses
-      description: Get the address of a specific asset, under a specific account, under a specific Non Custodial Wallet
+      description: >-
+        Get the address of a specific asset, under a specific account, under a
+        specific Non Custodial Wallet
       parameters:
         - name: walletId
           required: true
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: accountId
           required: true
           in: path
@@ -535,7 +664,7 @@ paths:
             example: 0
         - name: assetId
           required: true
-          example: "ETH"
+          example: ETH
           in: path
           schema:
             type: string
@@ -574,17 +703,28 @@ paths:
           schema:
             type: boolean
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetAddressesResponse"
+                $ref: '#/components/schemas/GetAddressesResponse'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const addresses = await
+            fireblocks.NCW.getWalletAssetAddresses("walletId", 0, "assetId")
   /v1/ncw/wallets/{walletId}/devices:
     get:
       operationId: getDevices
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: todo
+            name: Fireblocks Javascript NCW SDK example
       summary: Get registered devices
       description: Get registered devices for a specific Non Custodial Wallet
       parameters:
@@ -593,21 +733,37 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/DeviceDto"
+                  $ref: '#/components/schemas/DeviceDto'
       tags:
-        - Non Custodial Wallet Devices
+        - Devices
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: todo
   /v1/wallets/supported_assets:
     get:
       operationId: getSupportedAssets
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: |
+              const supportedAssets = await fireblocks.NCW.getSupportedAssets(
+                {
+                  undefined, 
+                  undefined, 
+                  true
+                }
+              )
+            name: Fireblocks Javascript NCW SDK example
       summary: Retrieve supported assets
       parameters:
         - name: pageCursor
@@ -631,17 +787,33 @@ paths:
           schema:
             type: boolean
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetAssetsResponse"
+                $ref: '#/components/schemas/GetAssetsResponse'
       tags:
-        - Non Custodial Wallet Assets
+        - Wallet Assets
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: |
+            const supportedAssets = await fireblocks.NCW.getSupportedAssets(
+              {
+                undefined, 
+                undefined, 
+                true
+              }
+            )
   /v1/ncw/wallets/{walletId}/devices/{deviceId}/enable:
     put:
       operationId: enableDevice
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: todo
+            name: Fireblocks Javascript NCW SDK example
       summary: Enable or Disable device
       description: Enable or Disable a device under a specific Non Custodial Wallet
       parameters:
@@ -650,24 +822,28 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: deviceId
           required: true
           in: path
           schema:
             type: string
-            example: "9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3"
+            example: 9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EnableDeviceDto"
+              $ref: '#/components/schemas/EnableDeviceDto'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
       tags:
-        - Non Custodial Wallet Devices
+        - Devices
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: todo
   /v1/wallets/{walletId}/devices/{deviceId}/setup_status:
     get:
       operationId: getDeviceSetupState
@@ -684,17 +860,24 @@ paths:
           schema:
             type: string
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeviceKeySetupResponse"
+                $ref: '#/components/schemas/DeviceKeySetupResponse'
       tags:
-        - Non Custodial Wallet Devices
+        - Devices
   /v1/ncw/wallets/{walletId}/devices/{deviceId}/invoke:
     post:
       operationId: invokeRpc
+      x-readme:
+        code-samples:
+          - language: javascript
+            code: >-
+              const invokeRPC = await fireblocks.NCW.invokeWalletRpc("walletId",
+              "deviceId", "payload")
+            name: Fireblocks Javascript NCW SDK example
       summary: Invoke RPC
       description: Invoke Fireblocks RPC for MPC related operations
       parameters:
@@ -703,30 +886,36 @@ paths:
           in: path
           schema:
             type: string
-            example: "550e8400-e29b-41d4-a716-446655440000"
+            example: 550e8400-e29b-41d4-a716-446655440000
         - name: deviceId
           required: true
           in: path
           schema:
             type: string
-            example: "9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3"
+            example: 9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RpcRequestDto"
+              $ref: '#/components/schemas/RpcRequestDto'
       responses:
-        "200":
-          description: ""
+        '200':
+          description: ''
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/RpcResultDto"
-                  - $ref: "#/components/schemas/RpcErrorDto"
+                  - $ref: '#/components/schemas/RpcResultDto'
+                  - $ref: '#/components/schemas/RpcErrorDto'
       tags:
-        - Non Custodial Wallets RPC
+        - RPC
+      x-codeSamples:
+        - lang: javascript
+          label: Javascript
+          source: >-
+            const invokeRPC = await fireblocks.NCW.invokeWalletRpc("walletId",
+            "deviceId", "payload")
 components:
   securitySchemes:
     bearerTokenAuth:
@@ -737,14 +926,13 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-
   schemas:
     WalletDto:
       type: object
       properties:
         walletId:
           type: string
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          example: 550e8400-e29b-41d4-a716-446655440000
         enabled:
           type: boolean
           example: true
@@ -764,9 +952,9 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/WalletDto"
+            $ref: '#/components/schemas/WalletDto'
         paging:
-          $ref: "#/components/schemas/Paging"
+          $ref: '#/components/schemas/Paging'
       required:
         - data
     EnableWalletDto:
@@ -785,7 +973,7 @@ components:
           example: 0
         walletId:
           type: string
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          example: 550e8400-e29b-41d4-a716-446655440000
       required:
         - accountId
         - walletId
@@ -795,9 +983,9 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/AccountDto"
+            $ref: '#/components/schemas/AccountDto'
         paging:
-          $ref: "#/components/schemas/Paging"
+          $ref: '#/components/schemas/Paging'
       required:
         - data
     AssetResponseDto:
@@ -866,9 +1054,9 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/AssetResponseDto"
+            $ref: '#/components/schemas/AssetResponseDto'
         paging:
-          $ref: "#/components/schemas/Paging"
+          $ref: '#/components/schemas/Paging'
       required:
         - data
     AddressDetails:
@@ -881,10 +1069,10 @@ components:
           example: 0
         asset:
           type: string
-          example: "ETH"
+          example: ETH
         address:
           type: string
-          example: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
+          example: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'
         addressType:
           type: string
         addressDescription:
@@ -969,7 +1157,7 @@ components:
         allocatedBalances:
           type: array
           items:
-            $ref: "#/components/schemas/AllocatedAssetBalance"
+            $ref: '#/components/schemas/AllocatedAssetBalance'
       required:
         - id
         - rewardInfo
@@ -979,9 +1167,9 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/AddressDetails"
+            $ref: '#/components/schemas/AddressDetails'
         paging:
-          $ref: "#/components/schemas/Paging"
+          $ref: '#/components/schemas/Paging'
       required:
         - data
     DeviceDto:
@@ -989,7 +1177,7 @@ components:
       properties:
         deviceId:
           type: string
-          example: "9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3"
+          example: 9ee1bff0-6dba-4f0c-9b75-03fe90e66fa3
         enabled:
           type: boolean
           example: false
@@ -1008,7 +1196,7 @@ components:
       properties:
         result:
           type: object
-          example: "{ ... }"
+          example: '{ ... }'
       required:
         - result
     RpcErrorDto:
@@ -1030,7 +1218,8 @@ components:
       properties:
         payload:
           type: string
-          example: '{"method":"request_mpc_setup","params":[{"algorithms":["MPC_CMP_ECDSA_SECP256K1","MPC_EDDSA_ED25519"]}],"headers":{"sdkVersion":1}}'
+          example: >-
+            {"method":"request_mpc_setup","params":[{"algorithms":["MPC_CMP_ECDSA_SECP256K1","MPC_EDDSA_ED25519"]}],"headers":{"sdkVersion":1}}
       required:
         - payload
     LatestBackupKey:
@@ -1038,12 +1227,12 @@ components:
       properties:
         deviceId:
           type: string
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          example: 550e8400-e29b-41d4-a716-446655440000
         publicKey:
           type: string
         keyId:
           type: string
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          example: 550e8400-e29b-41d4-a716-446655440000
         algorithm:
           type: string
           enum:
@@ -1059,14 +1248,14 @@ components:
       properties:
         passphraseId:
           type: string
-          example: "550e8400-e29b-41d4-a716-446655440000"
+          example: 550e8400-e29b-41d4-a716-446655440000
         createdAt:
           type: number
           example: 1707673441529
         keys:
           type: array
           items:
-            $ref: "#/components/schemas/LatestBackupKey"
+            $ref: '#/components/schemas/LatestBackupKey'
       required:
         - passphraseId
         - createdAt
@@ -1095,7 +1284,7 @@ components:
         setupStatus:
           type: array
           items:
-            $ref: "#/components/schemas/KeySetup"
+            $ref: '#/components/schemas/KeySetup'
         deviceId:
           type: string
       required:
@@ -1110,7 +1299,7 @@ components:
         deviceSetupStatus:
           type: array
           items:
-            $ref: "#/components/schemas/DeviceSetupStatus"
+            $ref: '#/components/schemas/DeviceSetupStatus'
       required:
         - status
         - deviceSetupStatus
@@ -1122,7 +1311,7 @@ components:
         setupStatus:
           type: array
           items:
-            $ref: "#/components/schemas/KeySetup"
+            $ref: '#/components/schemas/KeySetup'
         deviceId:
           type: string
       required:
